@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body class="light">
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <h2>📊 Dashboard</h2>
+    <button onclick="toggleTheme()">🌙 Theme</button>
+    <button onclick="logout()">Logout</button>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main">
+    <h1>Stock Dashboard</h1>
+
+    <input type="text" id="symbol" placeholder="Enter stock (AAPL)">
+    <button onclick="searchStock()">Search</button>
+
+    <!-- Cards -->
+    <div class="cards">
+      <div class="card">
+        <h3>Price</h3>
+        <p id="price">--</p>
+      </div>
+
+      <div class="card">
+        <h3>Change %</h3>
+        <p id="change">--</p>
+      </div>
+
+      <div class="card">
+        <h3>Trend</h3>
+        <p id="trend">--</p>
+      </div>
+    </div>
+
+    <!-- Chart -->
+    <canvas id="stockChart"></canvas>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

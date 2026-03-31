@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Signup</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="auth-body">
+
+  <div class="auth-container">
+
+    <!-- LEFT -->
+    <div class="auth-left">
+      <h1>Hello 👋</h1>
+      <p>Create your account</p>
+      <button onclick="goToLogin()">Login</button>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="auth-right">
+      <h2>Sign Up</h2>
+
+      <input type="text" id="newUser" placeholder="Username">
+      <input type="password" id="newPass" placeholder="Password">
+
+      <button onclick="signup()">Signup</button>
+    </div>
+
+  </div>
+
+  <script src="auth.js"></script>
+</body>
+</html>
