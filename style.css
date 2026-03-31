@@ -154,3 +154,12 @@ body.dark {
 body.dark .card {
   background: #1e1e1e;
 }
+.filters {
+  margin-top: 20px;
+  display: flex;
+  gap: 10px;
+}
+
+.filters input, .filters select {
+  padding: 10px;
+}

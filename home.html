@@ -24,6 +24,21 @@
     <input type="text" id="symbol" placeholder="Enter stock (AAPL)">
     <button onclick="searchStock()">Search</button>
 
+    <div class="filters">
+
+  <input type="number" id="minPrice" placeholder="Min Price">
+  <input type="number" id="maxPrice" placeholder="Max Price">
+
+  <select id="performance">
+    <option value="all">All</option>
+    <option value="gain">Gain</option>
+    <option value="loss">Loss</option>
+  </select>
+
+  <button onclick="applyFilters()">Apply Filters</button>
+
+</div>
+
     <!-- Cards -->
     <div class="cards">
       <div class="card">

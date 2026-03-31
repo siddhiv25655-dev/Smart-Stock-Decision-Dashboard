@@ -5,6 +5,9 @@ if (localStorage.getItem("loggedIn") !== "true") {
 
 const API_KEY = "QXTHLO2TLM7VTCXV";
 
+// Store multiple stocks
+let stocksData = [];
+
 // Search
 function searchStock() {
   const symbol = document.getElementById("symbol").value.toUpperCase();
@@ -29,6 +32,24 @@ function getStock(symbol) {
       const changeStr = stock["10. change percent"];
       const change = parseFloat(changeStr);
 
+      // Create object
+      const stockObj = {
+        symbol: symbol,
+        price: parseFloat(price),
+        change: change,
+        changeStr: changeStr
+      };
+
+      // Store in array
+      stocksData.push(stockObj);
+
+      // Render all stocks
+      renderStocks(stocksData);
+
+      // Update top cards (latest stock)
+      document.getElementById("price").innerText = price;
+      document.getElementById("change").innerText = changeStr;
+
       let trend = "";
       let color = "";
 
@@ -43,9 +64,6 @@ function getStock(symbol) {
         color = "orange";
       }
 
-      document.getElementById("price").innerText = price;
-      document.getElementById("change").innerText = changeStr;
-
       const trendEl = document.getElementById("trend");
       trendEl.innerText = trend;
       trendEl.style.color = color;
@@ -56,6 +74,62 @@ function getStock(symbol) {
       console.error(err);
       alert("Error fetching data ⚠️");
     });
+}
+
+// Render stocks
+function renderStocks(data) {
+  const container = document.getElementById("result");
+  container.innerHTML = "";
+
+  data.forEach(stock => {
+    let trend = "";
+    let color = "";
+
+    if (stock.change > 0) {
+      trend = "🟢 Bullish";
+      color = "green";
+    } else if (stock.change < 0) {
+      trend = "🔴 Bearish";
+      color = "red";
+    } else {
+      trend = "🟡 Stable";
+      color = "orange";
+    }
+
+    container.innerHTML += `
+      <div class="card">
+        <h3>${stock.symbol}</h3>
+        <p>Price: ${stock.price}</p>
+        <p>Change: ${stock.changeStr}</p>
+        <p style="color:${color}">${trend}</p>
+      </div>
+    `;
+  });
+}
+
+// Filter stocks
+function applyFilters() {
+  let filtered = [...stocksData];
+
+  const min = document.getElementById("minPrice").value;
+  const max = document.getElementById("maxPrice").value;
+  const performance = document.getElementById("performance").value;
+
+  if (min) {
+    filtered = filtered.filter(stock => stock.price >= min);
+  }
+
+  if (max) {
+    filtered = filtered.filter(stock => stock.price <= max);
+  }
+
+  if (performance === "gain") {
+    filtered = filtered.filter(stock => stock.change > 0);
+  } else if (performance === "loss") {
+    filtered = filtered.filter(stock => stock.change < 0);
+  }
+
+  renderStocks(filtered);
 }
 
 // Chart
