@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Dashboard</title>
+  <title>Smart Stock Dashboard</title>
   <link rel="stylesheet" href="style.css">
 
   <!-- Chart.js -->
@@ -12,42 +12,51 @@
 
   <!-- Sidebar -->
   <div class="sidebar">
-    <h2>📊 Dashboard</h2>
+    <h2>📊 StockAI</h2>
+
+    <ul>
+      <li>📈 Dashboard</li>
+      <li>⭐ Watchlist</li>
+      <li>⚙️ Settings</li>
+    </ul>
+
     <button onclick="toggleTheme()">🌙 Theme</button>
     <button onclick="logout()">Logout</button>
   </div>
 
   <!-- Main Content -->
   <div class="main">
-    <h1>Stock Dashboard</h1>
 
-    <input type="text" id="symbol" placeholder="Enter stock (AAPL)">
-    <button onclick="searchStock()">Search</button>
+    <!-- Top Bar -->
+    <div class="topbar">
+      <h1>Dashboard</h1>
+      <input type="text" id="symbol" placeholder="Search stock (AAPL)">
+      <button onclick="searchStock()">Search</button>
+    </div>
 
+    <!-- Filters -->
     <div class="filters">
+      <input type="number" id="minPrice" placeholder="Min Price">
+      <input type="number" id="maxPrice" placeholder="Max Price">
 
-  <input type="number" id="minPrice" placeholder="Min Price">
-  <input type="number" id="maxPrice" placeholder="Max Price">
+      <select id="performance">
+        <option value="all">All</option>
+        <option value="gain">Gain</option>
+        <option value="loss">Loss</option>
+      </select>
 
-  <select id="performance">
-    <option value="all">All</option>
-    <option value="gain">Gain</option>
-    <option value="loss">Loss</option>
-  </select>
+      <button onclick="applyFilters()">Apply</button>
+    </div>
 
-  <button onclick="applyFilters()">Apply Filters</button>
-
-</div>
-
-    <!-- Cards -->
-    <div class="cards">
+    <!-- Summary Cards -->
+    <div class="cards summary">
       <div class="card">
         <h3>Price</h3>
         <p id="price">--</p>
       </div>
 
       <div class="card">
-        <h3>Change %</h3>
+        <h3>Change</h3>
         <p id="change">--</p>
       </div>
 
@@ -57,8 +66,13 @@
       </div>
     </div>
 
+    <!-- Stock List -->
+    <div id="result" class="cards"></div>
+
     <!-- Chart -->
-    <canvas id="stockChart"></canvas>
+    <div class="chart-container">
+      <canvas id="stockChart"></canvas>
+    </div>
 
   </div>
 
