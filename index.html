@@ -1,54 +1,232 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Smart Stock Decision Dashboard</title>
-  <link rel="stylesheet" href="style.css">
+  <title>StockPulse — Smart Decision Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="dashboard">
-    <!-- Header -->
-    <header>
-      <h1>📊 Smart Stock Decision Dashboard</h1>
-      <div class="header-controls">
-        <button id="theme-toggle" class="theme-btn">🌙</button>
-        <div id="user-info"></div>
-        <button onclick="logout()" class="btn btn-danger">Logout</button>
+ 
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-top">
+      <div class="brand">
+        <span class="brand-icon">◈</span>
+        <div>
+          <div class="brand-name">StockPulse</div>
+          <div class="brand-sub">Market Intelligence</div>
+        </div>
       </div>
-    </header>
-
-    <!-- Search, Filters, Stocks Grid, Chart Section - SAME AS BEFORE -->
-    <div class="search-bar">
-      <input id="search-input" type="text" placeholder="Enter stock symbol (AAPL, TSLA, MSFT)">
-      <button onclick="searchStock()" class="btn btn-primary">Search</button>
-    </div>
-
-    <div class="filters">
-      <div class="filter-group">
-        <label>Price Range:</label>
-        <input id="min-price" type="number" placeholder="Min Price">
-        <span class="separator">-</span>
-        <input id="max-price" type="number" placeholder="Max Price">
+ 
+      <nav class="nav">
+        <a href="#" class="nav-item active" onclick="showSection('dashboard')">
+          <span class="nav-icon">▦</span> Dashboard
+        </a>
+        <a href="#" class="nav-item" onclick="showSection('watchlist')">
+          <span class="nav-icon">★</span> Watchlist
+        </a>
+        <a href="#" class="nav-item" onclick="showSection('settings')">
+          <span class="nav-icon">⚙</span> Settings
+        </a>
+      </nav>
+ 
+      <div class="sidebar-watchlist" id="sidebar-watchlist">
+        <div class="sl-title">MY WATCHLIST</div>
+        <div id="wl-items"></div>
       </div>
-      <select id="performance-filter" onchange="applyFilters()">
-        <option value="all">All Performance</option>
-        <option value="gain">Gainers 🟢</option>
-        <option value="loss">Losers 🔴</option>
-      </select>
-      <button onclick="sortStocks('price')" class="btn btn-secondary">Sort by Price</button>
-      <button onclick="sortStocks('change')" class="btn btn-secondary">Sort by % Change</button>
     </div>
-
-    <div id="stocks-grid" class="stocks-grid"></div>
-
-    <div id="chart-section" class="chart-section hidden">
-      <h2 id="chart-symbol"></h2>
-      <canvas id="price-chart" height="400"></canvas>
+ 
+    <div class="sidebar-bottom">
+      <div class="user-block" id="user-block">
+        <div class="user-avatar" id="user-avatar">?</div>
+        <div class="user-info-text">
+          <div class="user-name" id="user-name">Loading...</div>
+          <div class="user-email" id="user-email"></div>
+        </div>
+      </div>
+      <button onclick="logout()" class="logout-btn">↩ Logout</button>
     </div>
-  </div>
-
+  </aside>
+ 
+  <!-- Mobile menu toggle -->
+  <button class="menu-toggle" id="menu-toggle" onclick="toggleSidebar()">☰</button>
+ 
+  <!-- Main Content -->
+  <main class="main" id="main">
+ 
+    <!-- Top Bar -->
+    <div class="topbar">
+      <div class="topbar-left">
+        <h1 class="page-title" id="page-title">Dashboard</h1>
+        <div class="market-status">
+          <span class="status-dot"></span>
+          <span class="status-text">Markets Live</span>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <button class="theme-toggle" id="theme-toggle" title="Toggle theme">🌙</button>
+        <div class="clock" id="clock"></div>
+      </div>
+    </div>
+ 
+    <!-- ============ DASHBOARD SECTION ============ -->
+    <section id="section-dashboard">
+ 
+      <!-- Stats Row -->
+      <div class="stats-row" id="stats-row">
+        <div class="stat-card">
+          <div class="stat-label">TOTAL TRACKED</div>
+          <div class="stat-value" id="stat-total">—</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">GAINERS</div>
+          <div class="stat-value green" id="stat-gainers">—</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">LOSERS</div>
+          <div class="stat-value red" id="stat-losers">—</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">AVG CHANGE</div>
+          <div class="stat-value" id="stat-avg">—</div>
+        </div>
+      </div>
+ 
+      <!-- Search Bar -->
+      <div class="search-section">
+        <div class="search-wrap">
+          <span class="search-icon">⌕</span>
+          <input type="text" id="search-input" placeholder="Search symbol (AAPL, TSLA, MSFT...)" autocomplete="off">
+          <button onclick="searchStock()" class="search-btn" id="search-btn">ADD STOCK</button>
+        </div>
+      </div>
+ 
+      <!-- Filters & Sort -->
+      <div class="filter-bar">
+        <div class="filter-group">
+          <label>PRICE</label>
+          <input type="number" id="min-price" placeholder="Min">
+          <span class="sep">–</span>
+          <input type="number" id="max-price" placeholder="Max">
+        </div>
+ 
+        <div class="filter-group">
+          <label>PERFORMANCE</label>
+          <select id="performance-filter" onchange="applyFilters()">
+            <option value="all">All</option>
+            <option value="gain">Gainers 🟢</option>
+            <option value="loss">Losers 🔴</option>
+          </select>
+        </div>
+ 
+        <div class="sort-btns">
+          <button onclick="sortStocks('price')" class="sort-btn" id="sort-price">Price ↕</button>
+          <button onclick="sortStocks('change')" class="sort-btn" id="sort-change">% Change ↕</button>
+          <button onclick="sortStocks('alpha')" class="sort-btn" id="sort-alpha">A–Z ↕</button>
+        </div>
+ 
+        <button onclick="applyFilters()" class="filter-apply-btn">Apply</button>
+        <button onclick="resetFilters()" class="reset-btn">Reset</button>
+      </div>
+ 
+      <!-- Loading -->
+      <div class="loading-bar" id="loading-bar">
+        <div class="loading-progress"></div>
+      </div>
+ 
+      <!-- Stocks Grid -->
+      <div class="stocks-grid" id="stocks-grid"></div>
+ 
+      <!-- Chart Section -->
+      <div class="chart-section hidden" id="chart-section">
+        <div class="chart-header">
+          <div>
+            <h2 id="chart-symbol">Chart</h2>
+            <p class="chart-sub">30-Day Price History</p>
+          </div>
+          <button onclick="closeChart()" class="close-chart">✕ Close</button>
+        </div>
+        <div class="chart-wrap">
+          <canvas id="price-chart"></canvas>
+        </div>
+        <div class="chart-info" id="chart-info"></div>
+      </div>
+ 
+    </section>
+ 
+    <!-- ============ WATCHLIST SECTION ============ -->
+    <section id="section-watchlist" class="hidden">
+      <div class="wl-header">
+        <h2>Your Watchlist</h2>
+        <p>Stocks you've saved as favorites</p>
+      </div>
+      <div class="stocks-grid" id="watchlist-grid">
+        <div class="empty-state">
+          <div class="empty-icon">★</div>
+          <p>No favorites yet. Click the ★ on any stock card to add it here.</p>
+        </div>
+      </div>
+    </section>
+ 
+    <!-- ============ SETTINGS SECTION ============ -->
+    <section id="section-settings" class="hidden">
+      <div class="settings-wrap">
+        <h2>Settings</h2>
+ 
+        <div class="settings-card">
+          <h3>Appearance</h3>
+          <div class="setting-row">
+            <div>
+              <div class="setting-label">Dark Mode</div>
+              <div class="setting-desc">Switch between dark and light theme</div>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="dark-mode-toggle" onchange="toggleThemeFromSettings(this)">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+ 
+        <div class="settings-card">
+          <h3>Data Management</h3>
+          <div class="setting-row">
+            <div>
+              <div class="setting-label">Clear Watchlist</div>
+              <div class="setting-desc">Remove all stocks from tracked list</div>
+            </div>
+            <button onclick="clearWatchlist()" class="danger-btn">Clear All</button>
+          </div>
+          <div class="setting-row">
+            <div>
+              <div class="setting-label">Reset to Defaults</div>
+              <div class="setting-desc">Restore AAPL, TSLA, GOOGL</div>
+            </div>
+            <button onclick="resetDefaults()" class="secondary-btn">Reset</button>
+          </div>
+        </div>
+ 
+        <div class="settings-card">
+          <h3>Account</h3>
+          <div class="setting-row">
+            <div>
+              <div class="setting-label">Logout</div>
+              <div class="setting-desc">Sign out of your account</div>
+            </div>
+            <button onclick="logout()" class="danger-btn">Logout</button>
+          </div>
+        </div>
+      </div>
+    </section>
+ 
+  </main>
+ 
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+ 
   <script src="script.js"></script>
 </body>
 </html>
+ 

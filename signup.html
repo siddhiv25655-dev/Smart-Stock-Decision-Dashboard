@@ -3,64 +3,279 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Signup - Smart Stock Dashboard</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Sign Up — StockPulse</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #060b14;
+      --surface: #0d1825;
+      --border: rgba(255,255,255,0.07);
+      --accent: #00e5a0;
+      --accent2: #0077ff;
+      --text: #e8edf5;
+      --muted: #5a6a7e;
+      --danger: #ff4d6a;
+    }
+ 
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+ 
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+ 
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 80% 20%, rgba(0,119,255,0.07) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 80% at 20% 80%, rgba(0,229,160,0.06) 0%, transparent 60%);
+      pointer-events: none;
+    }
+ 
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+      background-size: 50px 50px;
+      pointer-events: none;
+    }
+ 
+    .auth-wrap {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      max-width: 440px;
+      padding: 20px;
+    }
+ 
+    .brand {
+      text-align: center;
+      margin-bottom: 36px;
+    }
+ 
+    .brand-logo {
+      font-family: 'Syne', sans-serif;
+      font-size: 2.2rem;
+      font-weight: 800;
+      letter-spacing: -1px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+ 
+    .brand-logo span { color: var(--text); -webkit-text-fill-color: var(--text); }
+    .brand p { color: var(--muted); font-size: 0.9rem; margin-top: 6px; }
+ 
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 40px 36px;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05);
+    }
+ 
+    .card h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+ 
+    .card .sub {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-bottom: 30px;
+    }
+ 
+    .form-group { margin-bottom: 18px; }
+ 
+    .form-group label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+    }
+ 
+    .form-group input {
+      width: 100%;
+      padding: 14px 18px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      transition: all 0.25s;
+      outline: none;
+    }
+ 
+    .form-group input:focus {
+      border-color: var(--accent2);
+      background: rgba(0,119,255,0.04);
+      box-shadow: 0 0 0 3px rgba(0,119,255,0.1);
+    }
+ 
+    .form-group input::placeholder { color: var(--muted); }
+ 
+    .btn-submit {
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(135deg, var(--accent2), #0055cc);
+      color: #fff;
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      letter-spacing: 0.05em;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: all 0.3s;
+    }
+ 
+    .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(0,119,255,0.3); }
+    .btn-submit:active { transform: translateY(0); }
+ 
+    .switch-text {
+      text-align: center;
+      margin-top: 22px;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+ 
+    .switch-text a { color: var(--accent); text-decoration: none; font-weight: 500; }
+    .switch-text a:hover { text-decoration: underline; }
+ 
+    .error-msg {
+      background: rgba(255,77,106,0.1);
+      border: 1px solid rgba(255,77,106,0.3);
+      color: var(--danger);
+      padding: 12px 16px;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      margin-bottom: 16px;
+      display: none;
+    }
+ 
+    .ticker-tape {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      background: rgba(13,24,37,0.8);
+      border-top: 1px solid var(--border);
+      padding: 10px 0;
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+    }
+ 
+    .ticker-inner {
+      display: flex;
+      gap: 60px;
+      animation: ticker 30s linear infinite;
+      white-space: nowrap;
+      font-size: 0.8rem;
+    }
+ 
+    .ticker-item { display: flex; gap: 10px; align-items: center; }
+    .ticker-sym { font-family: 'Syne', sans-serif; font-weight: 700; }
+    .tick-up { color: var(--accent); }
+    .tick-down { color: var(--danger); }
+ 
+    @keyframes ticker {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+  </style>
 </head>
 <body>
-  <div class="container">
+ 
+  <div class="auth-wrap">
+    <div class="brand">
+      <div class="brand-logo">Stock<span>Pulse</span></div>
+      <p>Real-time intelligent market analytics</p>
+    </div>
+ 
     <div class="card">
-      <h1>📊 Create Account</h1>
-      <p class="subtitle">Join the Smart Stock Decision Dashboard</p>
-
+      <h2>Create account</h2>
+      <p class="sub">Start tracking markets today</p>
+ 
+      <div class="error-msg" id="error-msg"></div>
+ 
       <form id="signup-form">
         <div class="form-group">
           <label>Full Name</label>
-          <input type="text" id="name" required>
+          <input type="text" id="name" placeholder="John Doe" required>
         </div>
         <div class="form-group">
-          <label>Email</label>
-          <input type="email" id="email" required>
+          <label>Email Address</label>
+          <input type="email" id="email" placeholder="you@example.com" required>
         </div>
         <div class="form-group">
           <label>Password</label>
-          <input type="password" id="password" required minlength="6">
+          <input type="password" id="password" placeholder="Min. 6 characters" required minlength="6">
         </div>
-
-        <button type="submit" class="btn btn-primary">Create Account</button>
+        <button type="submit" class="btn-submit">CREATE ACCOUNT →</button>
       </form>
-
+ 
       <p class="switch-text">
-        Already have an account? 
-        <a href="login.html">Login here</a>
+        Already have an account? <a href="login.html">Sign in</a>
       </p>
     </div>
   </div>
-
+ 
+  <div class="ticker-tape">
+    <div class="ticker-inner">
+      <span class="ticker-item"><span class="ticker-sym">AAPL</span> <span class="tick-up">▲ $189.30 +1.2%</span></span>
+      <span class="ticker-item"><span class="ticker-sym">TSLA</span> <span class="tick-down">▼ $242.10 -0.8%</span></span>
+      <span class="ticker-item"><span class="ticker-sym">GOOGL</span> <span class="tick-up">▲ $175.50 +2.1%</span></span>
+      <span class="ticker-item"><span class="ticker-sym">MSFT</span> <span class="tick-up">▲ $415.20 +0.5%</span></span>
+      <span class="ticker-item"><span class="ticker-sym">AMZN</span> <span class="tick-down">▼ $185.40 -1.1%</span></span>
+      <span class="ticker-item"><span class="ticker-sym">NVDA</span> <span class="tick-up">▲ $875.30 +3.4%</span></span>
+      <span class="ticker-item"><span class="ticker-sym">AAPL</span> <span class="tick-up">▲ $189.30 +1.2%</span></span>
+      <span class="ticker-item"><span class="ticker-sym">TSLA</span> <span class="tick-down">▼ $242.10 -0.8%</span></span>
+      <span class="ticker-item"><span class="ticker-sym">GOOGL</span> <span class="tick-up">▲ $175.50 +2.1%</span></span>
+      <span class="ticker-item"><span class="ticker-sym">MSFT</span> <span class="tick-up">▲ $415.20 +0.5%</span></span>
+      <span class="ticker-item"><span class="ticker-sym">AMZN</span> <span class="tick-down">▼ $185.40 -1.1%</span></span>
+      <span class="ticker-item"><span class="ticker-sym">NVDA</span> <span class="tick-up">▲ $875.30 +3.4%</span></span>
+    </div>
+  </div>
+ 
   <script>
     document.getElementById('signup-form').addEventListener('submit', function(e) {
       e.preventDefault();
       const name = document.getElementById('name').value.trim();
       const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value;
-
+      const err = document.getElementById('error-msg');
+ 
       let users = JSON.parse(localStorage.getItem('users')) || [];
       if (users.find(u => u.email === email)) {
-        alert('❌ Email already registered!');
+        err.textContent = '❌ This email is already registered.';
+        err.style.display = 'block';
         return;
       }
-
+ 
       users.push({ name, email, password });
       localStorage.setItem('users', JSON.stringify(users));
       localStorage.setItem('currentUser', JSON.stringify({ name, email }));
-
-      alert('✅ Account created successfully!');
       window.location.href = 'login.html';
     });
-
-    // Theme support
-    if (localStorage.getItem('theme') === 'dark') {
-      document.documentElement.classList.add('dark');
-    }
   </script>
 </body>
 </html>
+ 
